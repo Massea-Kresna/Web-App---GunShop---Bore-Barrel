@@ -12,6 +12,11 @@ const SORTS = {
   'price-desc': { label: 'Price (Most Expensive)', fn: (a, b) => b.price - a.price },
 }
 
+const SORT_TOGGLES = [
+  { field: 'name', label: 'Name' },
+  { field: 'price', label: 'Price' },
+]
+
 function Catalog() {
   const [query, setQuery] = useState('')
   const [type, setType] = useState('All')
@@ -27,6 +32,12 @@ function Catalog() {
     const cmp = SORTS[sort].fn
     return cmp ? [...filtered].sort(cmp) : filtered
   }, [query, type, sort])
+
+  const toggleSort = (field) => {
+    if (sort === `${field}-asc`) setSort(`${field}-desc`)
+    else if (sort === `${field}-desc`) setSort('Default')
+    else setSort(`${field}-asc`)
+  }
 
   const isFiltered = query !== '' || type !== 'All' || sort !== 'Default'
 
@@ -63,7 +74,7 @@ function Catalog() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search for a product name..."
+              placeholder="Search product..."
             />
           </label>
 
@@ -76,20 +87,34 @@ function Catalog() {
             </select>
           </label>
 
-          <label className="field">
-            <span>Sort</span>
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              {Object.entries(SORTS).map(([key, { label }]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
-          </label>
+          <div className="field" role="group" aria-labelledby="sort-label">
+            <span id="sort-label">Sort</span>
+            <div className="chips">
+              {SORT_TOGGLES.map(({ field, label }) => {
+                const active = sort.startsWith(`${field}-`)
+                const desc = sort === `${field}-desc`
+                return (
+                  <button
+                    key={field}
+                    type="button"
+                    className="chip chip-sort"
+                    aria-pressed={active}
+                    aria-label={active ? `Sorted by ${SORTS[sort].label}` : `Sort by ${label}`}
+                    onClick={() => toggleSort(field)}
+                  >
+                    {label}
+                    <span className="sort-arrow" aria-hidden="true">
+                      {active ? (desc ? '↓' : '↑') : '↕'}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
 
-          {isFiltered && (
-            <button type="button" className="toolbar-reset" onClick={reset}>
-              Reset
-            </button>
-          )}
+          <button type="button" className="toolbar-reset" onClick={reset}>
+            Reset
+          </button>
         </div>
 
         {results.length > 0 ? (
