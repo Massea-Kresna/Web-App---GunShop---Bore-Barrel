@@ -221,10 +221,10 @@
 .footer p {
   margin: 0;
 }
-
+/* Search, filter & sort toolbar */
 .toolbar {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   gap: 16px 20px;
   align-items: end;
   margin: 8px 0 24px;
@@ -247,6 +247,8 @@
 
 .field > span,
 .chips-group > legend {
+  display: block;
+  line-height: 1.2;
   padding: 0;
   font-size: 0.72rem;
   font-weight: 600;
@@ -294,15 +296,30 @@
   -webkit-appearance: none;
   appearance: none;
   padding-right: 34px;
-  min-width: 200px;
+  width: 150px;
   cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a6673' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
 }
 
-.chips-group {
-  grid-column: 1 / -1;
+.chip.chip-sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 112px;
+  height: 40px;
+}
+
+.sort-arrow {
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--steel);
+}
+
+.chip[aria-pressed='true'] .sort-arrow {
+  color: var(--brass);
 }
 
 .chips {
@@ -335,8 +352,8 @@
 }
 
 .toolbar-reset {
-  margin-left: auto;
-  height: 34px;
+  align-self: end;
+  height: 40px;
   padding: 0 4px;
   font: inherit;
   font-size: 0.9rem;
@@ -363,6 +380,10 @@
 @media (max-width: 560px) {
   .toolbar {
     grid-template-columns: 1fr;
+  }
+  .toolbar-reset {
+    justify-self: start;
+    height: 28px;
   }
   .toolbar select {
     min-width: 0;
