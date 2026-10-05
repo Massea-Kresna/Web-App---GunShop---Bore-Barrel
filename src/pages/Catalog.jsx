@@ -17,7 +17,7 @@ const SORT_TOGGLES = [
   { field: 'price', label: 'Price' },
 ]
 
-function Catalog() {
+function Catalog({ cart = {}, onSetQty }) {
   const [query, setQuery] = useState('')
   const [type, setType] = useState('All')
   const [sort, setSort] = useState('Default')
@@ -74,7 +74,7 @@ function Catalog() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search product..."
+              placeholder="Search product name..."
             />
           </label>
 
@@ -119,7 +119,14 @@ function Catalog() {
 
         {results.length > 0 ? (
           <ul className="stock">
-            {results.map((gun) => <GunCard key={gun.name} gun={gun} />)}
+            {results.map((gun) => (
+              <GunCard
+                key={gun.name}
+                gun={gun}
+                qty={cart[gun.name] ?? 0}
+                onSetQty={onSetQty}
+              />
+            ))}
           </ul>
         ) : (
           <p className="empty">No products match your search.</p>

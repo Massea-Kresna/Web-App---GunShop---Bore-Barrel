@@ -1,6 +1,7 @@
 import { useRef } from 'react'
+import QtyControl from './QtyControl.jsx'
 
-function GunCard({ gun }) {
+function GunCard({ gun, qty = 0, onSetQty }) {
   const popup = useRef(null)
 
   return (
@@ -13,6 +14,20 @@ function GunCard({ gun }) {
         </span>
         <span className="price">${gun.price.toLocaleString()}</span>
       </button>
+
+      <div className="card-cart">
+        {qty > 0 ? (
+          <QtyControl name={gun.name} qty={qty} onChange={(n) => onSetQty(gun.name, n)} />
+        ) : (
+          <button
+            type="button"
+            className="add-btn"
+            onClick={() => onSetQty(gun.name, 1)}
+          >
+            Add to cart
+          </button>
+        )}
+      </div>
 
       <dialog
         className="popup"
